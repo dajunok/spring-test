@@ -1,0 +1,85 @@
+一、案例说明：
+	1、案例使用MockMvc模拟测试Spring mvc Controller处理HTTP各种请求、响应功能。
+	2、案例使用MockMvc实现了对Http请求的模拟，能够直接使用网络的形式，转换到Controller的调用，这样可以使得测试速度快、不依赖网络环境，
+	      而且提供了一套验证的工具，这样可以使得请求的验证统一而且很方便。
+二、源代码文件（.java）介绍：
+三、知识点：
+	1、spring-test框架剖析：
+	   -------------------------------------------------------------------------------------------------------------------------------------------
+	       【org.springframework.test.web.servlet】：用于定义MockMvc基础接口和核心对象MockMvc.class。
+		 接口：
+			MockMvcBuilder.class：该接口用于构建核心对象MockMvc，它有一个重要的方法build()用来创建MockMvc实例。
+			MvcResult.class：该接口提供对已执行请求结果的访问。
+			RequestBuilder.class：该接口用于构建一个 MockHttpServletRequest。
+			ResultActions.class：★允许对已执行请求的结果应用操作，例如：执行andExpect()
+			ResultHandler.class：结果处理器，对已执行请求的结果执行通用操作，例如，打印调试信息。
+			ResultMatcher.class：★结果匹配器，将执行请求的结果与一些期望值匹配。
+			SmartRequestBuilder.class：它扩展于RequestBuilder接口，是RequestBuilder接口的变体
+		类：
+			MockMvc.class：服务器端Spring MVC测试支持的主要切入点，主要负责模拟执行请求。它是一个final类型，没有构造器，主要通过【org.springframework.test.web.servlet.setup】
+						      包中的静态工厂类MockMvcBuilders.class负责创建实例。该类包含perform()两个方法如下：
+			   	★	perform(RequestBuilder requestBuilder):ResultActions
+				★	getDispatcherServlet():DispatcherServlet	
+			MockMvcBuilderSupport.class：MockMvc构建器实现的基类，可以用于创建MockMvc实例。它包含一个createMockMvc()方法如下：
+				★	createMockMvc(Filter[] filters,
+                                      MockServletConfig servletConfig,
+                                      WebApplicationContext webAppContext,
+                                      @Nullable
+                                      RequestBuilder defaultRequestBuilder,
+                                      java.util.List<ResultMatcher> globalResultMatchers,
+                                      java.util.List<ResultHandler> globalResultHandlers,
+                                      @Nullable
+                                      java.util.List<DispatcherServletCustomizer> dispatcherServletCustomizers):MockMvc
+	   -------------------------------------------------------------------------------------------------------------------------------------------                               
+	       【org.springframework.test.web.servlet.request】：该包主要用于定义请求构建器（RequestBuilder）接口和类，模拟各种HTTP请求功能。
+	              接口：
+	     	ConfigurableSmartRequestBuilder.class：是一个泛型接口，它扩展于RequestBuilder和SmartRequestBuilder接口，该接口方法如下：
+	     		with(RequestPostProcessor requestPostProcessor)：B	     		
+			RequestPostProcessor.class：在MockHttpServletRequestBuilder或其子类MockMultipartHttpServletRequestBuilder构建MockHttpServletRequest实例之后，
+				希望进一步初始化MockHttpServletRequest实例的应用程序或第三方库的扩展点。这个接口的实现可以在将要构造请求时提供给MockHttpServletRequestBuilder.with(RequestPostProcessor)
+		  类：
+		  	MockHttpServletRequestBuilder.class：该类实现了ConfigurableSmartRequestBuilder<MockHttpServletRequestBuilder>和Mergeable接口。
+			MockMultipartHttpServletRequestBuilder.class：它继承MockHttpServletRequestBuilder类。
+			MockMvcRequestBuilders.class：它是一个静态方法工厂，类中包含各种用于创建RequestBuilder实例的静态方法。
+	   -------------------------------------------------------------------------------------------------------------------------------------------                               
+	       【org.springframework.test.web.servlet.result】：主要用于定义各种结果匹配器（ResultMatcher），判断模拟结果与期望值是否相符。     	                                             
+	              接口： 
+	     	PrintingResultHandler.ResultValuePrinter： 为模型中的断言提供工厂。  这个类的实例通常通过MockMvcResultMatchers.model()访问。                                  
+		  类：
+			ContentResultMatchers：用于响应内容断言的工厂。这个类的实例通常通过MockMvcResultMatchers.content()方法获取。
+			CookieResultMatchers：用于响应cookie断言的工厂。这个类的实例通常通过MockMvcResultMatchers.cookie()方法获取。
+			FlashAttributeResultMatchers：“output”flash属性断言的工厂。这个类的实例通常通过MockMvcResultMatchers.flash()方法获取。
+			HandlerResultMatchers：工厂，用于对所选处理程序或处理程序方法进行断言。这个类的实例通常通过MockMvcResultMatchers.handler()方法获取。
+			HeaderResultMatchers：用于响应头部断言的工厂。这个类的实例可以通过MockMvcResultMatchers.header()方法获得。
+			JsonPathResultMatchers：使用JsonPath表达式对响应内容进行断言的工厂。这个类的实例通常通过MockMvcResultMatchers.jsonPath(String,Matcher)
+					或者MockMvcResultMatchers.jsonPath(String,Object...)方法获取。
+			MockMvcResultHandlers：★	基于ResultHandler的结果操作的静态工厂方法。
+			MockMvcResultMatchers：★	基于ResultMatcher的结果动作的静态工厂方法。
+			ModelResultMatchers：为模型中的断言提供工厂。这个类的实例通常通过MockMvcResultMatchers.model()方法获取。
+			PrintingResultHandler：将MvcResult详细信息打印到给定输出流的结果处理程序，例如：System.out、System.err、自定义java.io.PrintWriter等。这个类的实例通常通过MockMvcResultHandlers中的一个打印或日志方法获取。
+			RequestResultMatchers：用于对请求进行断言的工厂。这个类的实例通常通过MockMvcResultMatchers.request()方法获取。
+			StatusResultMatchers：用于断言响应状态的工厂。这个类的实例通常通过MockMvcResultMatchers.status()方法获取。
+			ViewResultMatchers：用于对所选视图进行断言的工厂。这个类的实例通常通过MockMvcResultMatchers.view()方法获取。
+			XpathResultMatchers：使用XPath表达式对响应内容进行断言的工厂。这个类的实例通常通过 MockMvcResultMatchers.xpath(java.lang.String, java.lang.Object...)方法获取。                         
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
+                                      
