@@ -61,9 +61,31 @@
 			StatusResultMatchers：用于断言响应状态的工厂。这个类的实例通常通过MockMvcResultMatchers.status()方法获取。
 			ViewResultMatchers：用于对所选视图进行断言的工厂。这个类的实例通常通过MockMvcResultMatchers.view()方法获取。
 			XpathResultMatchers：使用XPath表达式对响应内容进行断言的工厂。这个类的实例通常通过 MockMvcResultMatchers.xpath(java.lang.String, java.lang.Object...)方法获取。                         
-                                      
-                                      
-                                      
+	   -------------------------------------------------------------------------------------------------------------------------------------------                               
+	       【	org.springframework.test.web.servlet.setup】：
+	              接口：                 
+	        ConfigurableMockMvcBuilder:它是一个泛型接口，用于定义构建MockMvc的常用方法。
+	        	父接口：MockMvcBuilder
+				实现该接口的类：AbstractMockMvcBuilder, DefaultMockMvcBuilder, StandaloneMockMvcBuilder
+			MockMvcConfigurer：以某种特定方式定制ConfigurableMockMvcBuilder，例如，希望提供设置MockMvc的快捷方式的第三方库。
+				实现该接口的类：MockMvcConfigurerAdapter, SharedHttpSessionConfigurer。
+			                      
+		  类：                                      
+			AbstractMockMvcBuilder：它是一个抽象类，具有配置过滤器、默认请求属性、全局期望和全局结果动作的常用方法。
+				父类：MockMvcBuilderSupport
+				实现接口：MockMvcBuilder, ConfigurableMockMvcBuilder<B>
+				直接子类：DefaultMockMvcBuilder, StandaloneMockMvcBuilder				
+			DefaultMockMvcBuilder：它是【AbstractMockMvcBuilder】抽象类的具体实现，可以把WebApplicationContext作为构造器参数传入。此外，如果所提供的WebApplicationContext中的ServletContext不包含WebApplicationContext.ROOT_WEB_Application_CONTEXT_ATTRIBUTE键的条目，则root WebApplicationContext将被检测并存储在ServletContext中的ROOT_WEB_._CONTEXT_ATTRIBUTE键下。
+				父类：AbstractMockMvcBuilder<DefaultMockMvcBuilder>
+				实现接口：MockMvcBuilder, ConfigurableMockMvcBuilder<DefaultMockMvcBuilder>				
+			MockMvcBuilders：它是一个final类型的静态方法工厂类，是访问所有可用MockMvcBuilders的主要类。
+				静态方法：
+				standaloneSetup(java.lang.Object... controllers):StandaloneMockMvcBuilder	
+				webAppContextSetup(WebApplicationContext context):DefaultMockMvcBuilder										
+			MockMvcConfigurerAdapter：MockMvcConfigurer的空方法实现（方法没有实体代码，留给子类覆盖实现）。
+				实现接口：MockMvcConfigurer				
+			SharedHttpSessionConfigurer
+			StandaloneMockMvcBuilder                                      
                                       
                                       
                                       
